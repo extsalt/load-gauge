@@ -42,3 +42,8 @@ curl -X POST \
     -F "field2=value2" \
     http://localhost:8008/form
 ```
+
+```shell
+cd web
+php -S localhost:80 -t .
+```

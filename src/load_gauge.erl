@@ -46,8 +46,7 @@ stats_manager(S) ->
 load_gauge(Username, Worker, Url) ->
 %%  start stats manager
   M = #stats{okResponse = 0, errorResponse = 0},
-  S = spawn(load_request, stats_manager, [M]),
-  register(list_to_atom(Username), S),
+  spawn(load_request, stats_manager, [M]),
   spawn(load_gauge, http_request_reaper, [Username, Worker, Url]).
 
 %% Start http manager
@@ -58,7 +57,7 @@ load_gauge(Username, Worker, Url) ->
 load_gauge_manager() ->
   receive
     {From, {gauge, Username, Url, Workers}} ->
-      spawn(load_gauge, load_gauge, [Username, Workers, Url]),
+      spawn_link(load_gauge, load_gauge, [Username, Workers, Url]),
       From ! {ok, Workers},
       load_gauge_manager();
     {From, _} -> From ! {error, "could not understand request"},
